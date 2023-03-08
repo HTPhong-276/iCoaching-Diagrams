@@ -1,0 +1,24 @@
+@startuml ViewCoachAboutme
+
+actor User as user
+participant "ICoaching client" as client
+participant "ICoaching server" as server 
+database "MySQL" as db
+
+autonumber "<b>0:"
+
+user -> client : "View coach about-me" request 
+client -> server : Get: api/coach/{coachId}/about-me
+server -> db : Retrive Coach by coachId
+db --> server : Retrived Data
+
+alt Has data
+    server --> client : Coach about-me information 
+    client -> client : Display data
+
+else No data
+    server --> client : Coach not found message
+    client -> client : Display error message 
+    |||
+end 
+@enduml

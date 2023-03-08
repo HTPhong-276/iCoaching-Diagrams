@@ -1,0 +1,33 @@
+X-Login                                      X: done     O: not yet    V: final
+X-Register
+X-forgot pass
+X-all coach
+X-coach aboutme
+X-coach photos
+O-feedbacks
+X-all Tranining course
+X-detail training course
+X-Profile 
+X-update Profile
+X-create admin acc
+X-lock/unlock acc
+X-all coach verification req
+O-verify request
+X-detail veri req
+X-all report
+X-detail report
+X-all Clients
+X-all coaching request 
+X-Accepct/reject coaching request
+X-cert submit
+X-create course
+X-update course
+O-request coaching
+O-payment
+O-list client's contract
+O-create contract
+O-report
+O-detail contract
+
+
+

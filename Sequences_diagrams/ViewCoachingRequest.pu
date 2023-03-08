@@ -1,0 +1,31 @@
+@startuml ViewCoachingRequests
+
+actor User as user
+participant "ICoaching client" as client
+participant "ICoaching server" as server 
+database "MySQL" as db
+
+autonumber "<b>0:"
+
+user -> client : Click coaching requests tab
+client -> server : Get: api/Coach/coaching-requests
+server -> db : Get coaching request to logged coach by status
+db --> server : Retrived Data
+
+alt Has data
+    server -> server : Apply pagination
+    server --> client : List of request
+    client -> client : Display each request client information
+    |||
+
+else No data
+    server --> client : No data found message
+    client -> client : Display message 
+    |||
+
+else Error
+    server --> client : Error message
+    |||
+end 
+
+@enduml

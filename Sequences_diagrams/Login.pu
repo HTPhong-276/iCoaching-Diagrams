@@ -1,0 +1,25 @@
+@startuml Login
+
+actor User as user
+participant "ICoaching client" as client
+participant "ICoaching server" as server 
+database "MySQL" as db
+
+autonumber "<b>0:"
+
+user -> client : Click login button
+client -> server : POST: api/User/login
+server -> db : Get user by username
+db --> server : Retrived user
+server -> server: Verify user
+
+alt Valid user
+    server -> client : Tokens
+    |||
+else Unvalid user
+    server --> client : Unvalid user notification
+    client -> client : Display error message  
+    |||
+end 
+
+@enduml

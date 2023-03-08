@@ -1,0 +1,28 @@
+@startuml AcceptRejectCoachingRequest
+actor User as user
+participant "ICoaching client" as client
+participant "ICoaching server" as server 
+database "MySQL" as db
+
+autonumber "<b>0:"
+
+user -> client : Click Accecpt / Reject account button
+client -> server : PUT: api/Coach/coaching-request/{requestId}
+server -> db : Get coaching request by requestId
+db --> server : Retrived data
+
+alt No data
+    server --> client : Request not found notification
+    client -> client : Display error message 
+    |||
+else Has data
+    alt Accecpt
+        server -> db : Update request status to "Accecpt"
+        |||
+    else Reject
+        server -> db : Update request status to "Reject"
+        |||
+    end
+    |||
+end 
+@enduml

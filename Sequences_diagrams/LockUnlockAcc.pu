@@ -1,0 +1,28 @@
+@startuml Register
+actor User as user
+participant "ICoaching client" as client
+participant "ICoaching server" as server 
+database "MySQL" as db
+
+autonumber "<b>0:"
+
+user -> client : Click Lock/Unlock account button
+client -> server : PUT: api/Admin/account-status/{userId}
+server -> db : Get user by userId
+db --> server : Retrived data
+
+alt No data
+    server --> client : User not found notification
+    client -> client : Display error message 
+    |||
+else Has data
+    alt User locked
+        server -> db : Update status to "unlocked"
+        |||
+    else User unlocked
+        server -> db : Update status to "locked"
+        |||
+    end
+    |||
+end 
+@enduml

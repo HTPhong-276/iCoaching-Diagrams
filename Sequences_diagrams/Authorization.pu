@@ -1,0 +1,21 @@
+@startuml authorization
+actor Users as user
+participant "ICoaching client" as client
+participant "ICoaching server" as server 
+
+user++
+
+user -> client++: perform action 
+
+client -> server++: send request with access token
+
+server -> server++--: validate token
+
+alt Authorization success
+    server --> client: return requested data from Server
+    client --> user: show action result
+else Authorization fail
+    server --> client--: return 401 authorization error
+    client --> user--: show login page or display error message
+end
+@enduml

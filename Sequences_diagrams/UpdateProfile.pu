@@ -1,0 +1,49 @@
+@startuml UpdateProfile
+actor User as user
+participant "ICoaching client" as client
+participant "ICoaching server" as server 
+participant "Cloudinary storage" as imgCloud
+database "MySQL" as db
+
+autonumber "<b>0:"
+
+user -> client : Click update profile
+client -> server : PUT: api/User/profile
+server -> db : Check existence of new email and phone
+db --> server : Retrived result
+
+alt Existence
+    server --> client : Infomation existed notification
+    client -> client : Display error message 
+    |||
+else Non-existence
+
+    alt Avatar changed
+        server -> imgCloud : Delete the old avatar\nthen save new one
+        imgCloud --> server : new avatar url and publicId
+        |||
+    end
+
+    server -> db : Update new profile information
+    db --> server : Update data result
+
+    alt Success
+        server --> client : Update success message
+        client -> client : Display message
+
+        alt Email changed
+            server --> user : Send email-confirm email
+            user -> server : Confirm email
+            server -> db : Update email verify status
+            |||
+        end
+
+    else Fail
+        server --> client : Error result message
+        client -> client : Display error
+        |||
+    end
+
+    |||
+end 
+@enduml
