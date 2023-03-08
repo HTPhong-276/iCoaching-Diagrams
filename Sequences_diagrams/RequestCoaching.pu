@@ -1,0 +1,40 @@
+@startuml RequestCoaching
+actor User as user
+participant "ICoaching client" as client
+participant "ICoaching server" as server 
+database "MySQL" as db
+
+autonumber "<b>0:"
+
+user -> client : Click request training course
+client -> server : POST: api/Client/coaching-request
+server -> db : Get requested coach and course 
+db --> server : Retrived result
+
+alt No data
+    server --> client : Certification submited before notification
+    client -> client : Display notification 
+    |||
+else Has data
+    server -> db : Check coach and course already\nrequested by user
+    db --> server : Result
+
+    alt Not yet
+        server -> db : Create and save new coaching request
+        db --> server : Save data result
+        alt Success
+            server --> client : Request coaching success message
+            client -> client : Display message
+        else Fail
+            server --> client : Error result message
+            client -> client : Display error
+        end
+        |||
+    else Already requested
+        server --> client : Already requested course message
+        client -> client : Display message
+    end
+
+    |||
+end 
+@enduml

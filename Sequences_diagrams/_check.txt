@@ -1,10 +1,10 @@
-X-Login                                      X: done     O: not yet    V: final
-X-Register
+X-Login                               X: done     O: not yet
+X-Register                            V: final    ?: HOW???
 X-forgot pass
 X-all coach
 X-coach aboutme
 X-coach photos
-O-feedbacks
+?-feedbacks
 X-all Tranining course
 X-detail training course
 X-Profile 
@@ -22,11 +22,11 @@ X-Accepct/reject coaching request
 X-cert submit
 X-create course
 X-update course
-O-request coaching
-O-payment
-O-list client's contract
-O-create contract
-O-report
+X-request coaching
+?-payment
+X-list client's contract
+?-create contract
+?-report
 O-detail contract
 
 
