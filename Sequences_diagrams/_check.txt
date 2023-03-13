@@ -28,7 +28,7 @@ X-list client's contract
 ?-create contract
 ?-report
 O-detail contract
-O-Update avatar
+X-Update avatar
 
 
 
