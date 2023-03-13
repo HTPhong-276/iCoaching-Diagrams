@@ -4,30 +4,38 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click register button
-client -> server : POST: api/User/register
-server -> db : Check existence username, email and phone
+user -> client++ : Click register button
+client -> server++ : POST: api/User/register
+server -> db++ : Check existence username, email and phone
 db --> server : Retrived result
+deactivate
 
 alt Existence
     server --> client : Infomation existed notification
-    client -> client : Display error message 
+    client -> client++ : Display error message 
+    deactivate 
     |||
 else Non-existence
-    server -> db : Save registered user
+    server -> db++ : Save registered user
     db --> server : Save data result
+    deactivate
     alt Success
         server --> client : Register success message
-        client -> client : Display message
+        client -> client++ : Display message
+        deactivate
         server --> user : Send email-confirm email
         user -> server : Confirm email
-        server -> db : Update email verify status
+        server -> db++ : Update email verify status
+        deactivate
         |||
     else Fail
         server --> client : Error result message
-        client -> client : Display error
+        deactivate
+        client -> client++ : Display error
+        deactivate
+        deactivate
         |||
     end
     |||

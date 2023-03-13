@@ -5,20 +5,25 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : View report detail
-client -> server : Get: ---Get client contract detail--- 
-server -> db : Retrive the contract by contract id
+user -> client++ : View report detail
+client -> server++ : Get: ---Get client contract detail--- 
+server -> db++ : Retrive the contract by contract id
 db --> server : Retrived Data
+deactivate
 
 alt Has data
     server --> client : Retrived data
-    client -> client : Display data
+    client -> client++ : Display data
+    deactivate
 
 else No data
     server --> client : Data not found message
-    client -> client : Display error message 
+    deactivate
+    client -> client++ : Display error message 
+    deactivate
+    deactivate
     |||
 end 
 @enduml

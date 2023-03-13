@@ -5,26 +5,31 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click coaching requests tab
-client -> server : Get: api/Coach/coaching-requests
-server -> db : Get coaching request to logged coach by status
+user -> client++ : Click coaching requests tab
+client -> server++ : Get: api/Coach/coaching-requests
+server -> db++ : Get coaching request to logged coach by status
 db --> server : Retrived Data
+deactivate
 
 alt Has data
-    server -> server : Apply pagination
+    server -> server++ : Apply pagination
+    deactivate
     server --> client : List of request
-    client -> client : Display each request client information
+    client -> client++ : Display each request client information
+    deactivate
     |||
 
 else No data
     server --> client : No data found message
-    client -> client : Display message 
+    client -> client++ : Display message
+    deactivate 
     |||
 
 else Error
     server --> client : Error message
+    deactivate
     |||
 end 
 

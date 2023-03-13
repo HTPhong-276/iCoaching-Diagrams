@@ -4,23 +4,29 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click Lock/Unlock account button
-client -> server : PUT: api/Admin/account-status/{userId}
-server -> db : Get user by userId
+user -> client++ : Click Lock/Unlock account button
+client -> server++ : PUT: api/Admin/account-status/{userId}
+server -> db++ : Get user by userId
 db --> server : Retrived data
+deactivate db
 
 alt No data
     server --> client : User not found notification
-    client -> client : Display error message 
+    client -> client++ : Display error message 
+    deactivate client
+    deactivate client
     |||
 else Has data
     alt User locked
-        server -> db : Update status to "unlocked"
+        server -> db++ : Update status to "unlocked"
+        deactivate db
         |||
     else User unlocked
-        server -> db : Update status to "locked"
+        server -> db++ : Update status to "locked"
+        deactivate db
+        deactivate server
         |||
     end
     |||

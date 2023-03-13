@@ -1,18 +1,23 @@
-@startuml UpdateCourse
-actor Coach as user
+@startuml UpdateAvatar
+actor "Authenticated\nUser" as user
 participant "Front-end" as client
 participant "Back-end" as server 
+participant "Storage service" as imgCloud
 database "Database" as db
 
 autonumber 1.1 "<b>0:"
 
-user -> client++ : Click update course
-client -> server++ : PUT: api/training-course/{courseId}
-server -> db++ : Update course infomation
+user -> client++ : Click update Avatar
+client -> server++ : PUT: api/User/avatar
+server -> imgCloud++ : Save avatar
+imgCloud --> server : Url and publicId
+deactivate
+server -> db++ : Update avatar url and publicId
 db --> server : Update data result
 deactivate
 
 alt Success
+    
     server --> client : Update success message
     client -> client++ : Display message
     deactivate

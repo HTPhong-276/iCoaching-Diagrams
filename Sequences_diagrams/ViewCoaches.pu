@@ -5,26 +5,31 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : "View all coaches" request
-client -> server : Get: api/admin/coaches (for admins) \nGet: api/coaches (for other roles)
-server -> db : Get list of coaches
+user -> client++ : "View all coaches" request
+client -> server++ : Get: api/admin/coaches (for admins) \nGet: api/coaches (for other roles)
+server -> db++ : Get list of coaches
 db --> server : Retrived Data
+deactivate
 
 alt Has data
-    server -> server : Apply pagination
+    server -> server++ : Apply pagination
+    deactivate
     server --> client : List of coaches
-    client -> client : Display data
+    client -> client++ : Display data
+    deactivate
     |||
 
 else No data
     server --> client : No coach found message
-    client -> client : Display message 
+    client -> client++ : Display message
+    deactivate 
     |||
 
 else Error
     server --> client : Error message
+    deactivate
     |||
 end 
 

@@ -5,20 +5,24 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : "View coach training course" request 
-client -> server : Get: api/Admin/cert-requests/{requestId}
-server -> db : Retrive the request by id
+user -> client++ : "View coach training course" request 
+client -> server++ : Get: api/Admin/cert-requests/{requestId}
+server -> db++ : Retrive the request by id
 db --> server : Retrived Data
+deactivate
 
 alt Has data
     server --> client : Retrived data
-    client -> client : Display data
+    client -> client++ : Display data
+    deactivate
 
 else No data
     server --> client : Data not found message
-    client -> client : Display error message 
+    deactivate
+    client -> client++ : Display error message 
+    deactivate
     |||
 end 
 @enduml

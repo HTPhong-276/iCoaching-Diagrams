@@ -5,25 +5,30 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click Contract tabs
-client -> server : Get: ---get client contract api---
-server -> db : Get list of contract of logged client
+user -> client++ : Click Contract tabs
+client -> server++ : Get: ---get client contract api---
+server -> db++ : Get list of contract of logged client
 db --> server : Retrived Data
+deactivate
 
 alt Has data
-    server -> server : Apply pagination
+    server -> server++ : Apply pagination
+    deactivate 
     server --> client : List of contracts
-    client -> client : Display contracts
+    client -> client++ : Display contracts
+    deactivate
     |||
 
 else No data
     server --> client : No data found message
-    client -> client : Display message 
+    client -> client++ : Display message
+    deactivate 
     |||
 else Error
     server --> client : Error message
+    deactivate
     |||
 end 
 

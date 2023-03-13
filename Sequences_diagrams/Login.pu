@@ -5,20 +5,25 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click login button
-client -> server : POST: api/User/login
-server -> db : Get user by username
+user -> client++ : Click login button
+client -> server++ : POST: api/User/login
+server -> db++ : Get user by username
 db --> server : Retrived user
-server -> server: Verify user
+deactivate db
+server -> server++: Verify user
+deactivate server
 
 alt Valid user
     server -> client : Tokens
     |||
 else Unvalid user
     server --> client : Unvalid user notification
-    client -> client : Display error message  
+    deactivate
+    client -> client++ : Display error message
+    deactivate
+    deactivate  
     |||
 end 
 

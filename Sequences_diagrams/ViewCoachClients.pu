@@ -5,26 +5,31 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click all clients tab
-client -> server : Get: api/Coach/contract
-server -> db : Get list of contract of logged coach
+user -> client++ : Click all clients tab
+client -> server++ : Get: api/Coach/contract
+server -> db++ : Get list of contract of logged coach
 db --> server : Retrived Data
+deactivate
 
 alt Has data
-    server -> server : Apply pagination
+    server -> server++ : Apply pagination
+    deactivate
     server --> client : List of contracts
-    client -> client : Display each contract's client information
+    client -> client++ : Display each contract's client information
+    deactivate
     |||
 
 else No data
     server --> client : No data found message
-    client -> client : Display message 
+    client -> client++ : Display message
+    deactivate 
     |||
 
 else Error
     server --> client : Error message
+    deactivate
     |||
 end 
 

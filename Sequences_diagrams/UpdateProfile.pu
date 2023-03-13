@@ -2,45 +2,45 @@
 actor "Authenticated\nUser" as user
 participant "Front-end" as client
 participant "Back-end" as server 
-participant "Storage service" as imgCloud
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click update profile
-client -> server : PUT: api/User/profile
-server -> db : Check existence of new email and phone
+user -> client++ : Click update profile
+client -> server++ : PUT: api/User/profile
+server -> db++ : Check existence of new email and phone
 db --> server : Retrived result
+deactivate
 
 alt Existence
     server --> client : Infomation existed notification
-    client -> client : Display error message 
+    client -> client++ : Display error message
+    deactivate 
     |||
 else Non-existence
-
-    alt Avatar changed
-        server -> imgCloud : Delete the old avatar\nthen save new one
-        imgCloud --> server : new avatar url and publicId
-        |||
-    end
-
-    server -> db : Update new profile information
+    server -> db++ : Update new profile information
     db --> server : Update data result
+    deactivate
 
     alt Success
         server --> client : Update success message
-        client -> client : Display message
+        client -> client++ : Display message
+        deactivate
 
         alt Email changed
             server --> user : Send email-confirm email
             user -> server : Confirm email
-            server -> db : Update email verify status
+            server -> db++ : Update email verify status
+            deactivate
             |||
         end
 
     else Fail
         server --> client : Error result message
-        client -> client : Display error
+        deactivate
+        client -> client++ : Display error
+        deactivate
+        deactivate
         |||
     end
 

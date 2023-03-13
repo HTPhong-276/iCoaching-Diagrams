@@ -5,20 +5,25 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click profile tab 
-client -> server : Get: api/User/profile
-server -> db : Retrive logged user infomation
+user -> client++ : Click profile tab 
+client -> server++ : Get: api/User/profile
+server -> db++ : Retrive logged user infomation
 db --> server : Retrived Data
+deactivate
 
 alt Has data
     server --> client : Retrived the user information
-    client -> client : Display data
+    client -> client++ : Display data
+    deactivate
 
 else No data
     server --> client : User not found message
-    client -> client : Display error message 
+    deactivate
+    client -> client++ : Display error message
+    deactivate
+    deactivate 
     |||
 end 
 @enduml

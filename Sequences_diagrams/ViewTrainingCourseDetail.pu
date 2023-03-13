@@ -5,18 +5,20 @@ participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click on the course 
-client -> server : Get: api/coach/{coachId}/training-course-detail/{courseId}
-server -> db : Retrive training course by coachId and courseId
+user -> client++ : Click on the course 
+client -> server++ : Get: api/coach/{coachId}/training-course-detail/{courseId}
+server -> db++ : Retrive training course by coachId and courseId
 db --> server : Retrived Data
+deactivate
 
 alt Has data
     server --> client : Retrived the course detail
 
     alt Client role
-        server -> server : Check the course is requested\nby logged Client or not
+        server -> server++ : Check the course is requested\nby logged Client or not
+        deactivate
 
         alt Requested
             server -> client : Unable to request course
@@ -27,11 +29,15 @@ alt Has data
         end
     end
 
-    client -> client : Display data
+    client -> client++ : Display data
+    deactivate
 
 else No data
     server --> client : Course not found message
-    client -> client : Display error message 
+    deactivate
+    client -> client++ : Display error message 
+    deactivate
+    deactivate
     |||
 end 
 @enduml
