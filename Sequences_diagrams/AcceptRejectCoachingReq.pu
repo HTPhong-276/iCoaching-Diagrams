@@ -1,14 +1,13 @@
 @startuml AcceptRejectCoachingRequest
-actor Coach as user
+actor Client as user
+actor Coach as coach
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
 autonumber 1.1 "<b>0:"
 
-
-
-user -> client++ : Click Accecpt / Reject account button
+coach -> client++ : Click Accecpt / Reject request button
 
 client -> server++ : PUT: api/Coach/coaching-request/{requestId}
 server -> db++ : Get coaching request by requestId
@@ -19,19 +18,37 @@ alt No data
     server --> client : Request not found notification
     client -> client++ : Display error message
     deactivate client
-    deactivate client 
     |||
 else Has data
-    alt Accecpt
-        server -> db++ : Update request status to "Accecpt"
+    alt Coach accepts
+        server -> server++ : Create a contract\n(See Create contract diagram)
+        deactivate 
+        server -> db++ : Delete current coaching request 
         deactivate db
+        server --> client : Coach accepts request message
+        client -> client++ : Client confirm accept request
+        deactivate
+        deactivate client
         |||
-    else Reject
-        server -> db++ : Update request status to "Reject"
+    else Coach Rejects
+        server -> db++ : Update request status to \n"Reject" with the reason
         deactivate server
         deactivate db
         |||
     end
     |||
 end 
+
+autonumber inc A
+user -> client++ : Confirm accept/reject coaching contract
+client -> server++ : PUT: client confirm contract api
+alt accept
+    server -> db++ : Update contract status to "Active"
+else reject
+    server -> db : Update contract status to "Cancel"
+end
+db --> server : Update contract result
+server --> client : result message
+client -> client++ : display message
+deactivate  
 @enduml

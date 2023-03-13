@@ -1,0 +1,28 @@
+@startuml ReportCoach
+actor Client as user
+participant "Front-end" as client
+participant "Back-end" as server
+database "Database" as db
+
+autonumber 1.1 "<b>0:"
+
+user -> client++ : Click feedback coach
+client -> server++ : POST: feedback api
+server -> db++ : Save feedback
+db --> server : Save result
+deactivate db
+ 
+alt Success
+    server --> client : Feedback success message
+    client -> client++ : Display message
+    deactivate client
+    |||
+else Fail
+    server --> client : Error result message
+    deactivate server
+    client -> client++ : Display error
+    deactivate client
+    deactivate client
+    |||
+end
+@enduml

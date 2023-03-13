@@ -1,0 +1,36 @@
+@startuml AcceptRejectCoachVerifyRequest
+actor Admin as user
+participant "Front-end" as client
+participant "Back-end" as server 
+database "Database" as db
+
+autonumber 1.1 "<b>0:"
+
+user -> client++ : Click Accecpt / Reject account button
+client -> server++ : PUT: api/Admin/coach-account-status/{userId}
+server -> db++ : Get certification verification \nrequest by userId
+db --> server : Retrived data
+deactivate db
+
+alt No data
+    server --> client : Request not found notification
+    client -> client++ : Display error message
+    deactivate client
+    |||
+else Has data
+    alt Accept
+        server -> db++ : Update request status to "Accept"
+        |||
+    else Reject
+        server -> db : Update request status to \n"Reject" with the reason
+        deactivate server
+        |||
+    end
+    db --> server : Update result
+    deactivate db
+    server --> client : Result message
+    client -> client++ : Display message
+    deactivate
+    |||
+end 
+@enduml

@@ -1,0 +1,40 @@
+@startuml CreateContract
+actor "Authenticated\nUser" as user
+participant "Front-end" as client
+participant "Back-end" as server 
+database "Database" as db
+
+autonumber 1.1 "<b>0:"
+
+user -> client++ : Create contract action
+client -> server++ : POST: create contract api
+server -> db++ : Retrive related coach and client
+db --> server : Retrive result
+deactivate db
+ 
+alt Has data
+    server -> server++ : Create new contract
+    server -> db++ : Save new contract
+    db --> server : Save data result
+    deactivate
+    deactivate
+
+    alt Success
+        server --> client : Create contract success message
+        client -> client++ : Display message
+        deactivate client
+    else Fail 
+        server --> client : Fail message
+        client -> client++ : Display message
+        deactivate client
+    end
+    |||
+else No data
+    server --> client : No data message
+    deactivate server
+    client -> client++ : Display error
+    deactivate client
+    deactivate client
+    |||
+end
+@enduml
