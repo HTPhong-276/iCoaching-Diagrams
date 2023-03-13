@@ -1,9 +1,9 @@
 @startuml UpdateProfile
-actor User as user
-participant "ICoaching client" as client
-participant "ICoaching server" as server 
-participant "Cloudinary storage" as imgCloud
-database "MySQL" as db
+actor "Authenticated\nUser" as user
+participant "Front-end" as client
+participant "Back-end" as server 
+participant "Storage service" as imgCloud
+database "Database" as db
 
 autonumber "<b>0:"
 

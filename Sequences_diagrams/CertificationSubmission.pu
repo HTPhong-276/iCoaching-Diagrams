@@ -1,35 +1,42 @@
 @startuml CertificationSubmit
-actor User as user
-participant "ICoaching client" as client
-participant "ICoaching server" as server 
-participant "Cloudinary storage" as imgCloud
-database "MySQL" as db
+actor Coach as user
+participant "Front-end" as client
+participant "Back-end" as server 
+participant "Storage service" as imgCloud
+database "Database" as db
 
-autonumber "<b>0:"
+autonumber 1.1 "<b>0:"
 
-user -> client : Click submit certificate
-client -> server : POST: api/Coach/certification-request
-server -> db : Check existence of logged coach's submission
+user -> client++ : Click submit certificate
+client -> server++ : POST: api/Coach/certification-request
+server -> db++ : Check existence of logged coach's submission
 db --> server : Retrived result
+deactivate db
 
 alt Existence
     server --> client : Certification submited before notification
-    client -> client : Display notification 
+    client -> client++ : Display notification
+    deactivate client 
     |||
 else Non-existence
 
-    server -> imgCloud : Save certification images
+    server -> imgCloud++ : Save certification images
     imgCloud --> server : Url and publicId
+    deactivate imgCloud
 
-    server -> db : Update new profile information
+    server -> db++ : Update new profile information
     db --> server : Update data result
+    deactivate db
 
     alt Success
         server --> client : Certificate submit message
-        client -> client : Display message
+        client -> client++ : Display message
+        deactivate client
     else Fail
         server --> client : Error result message
-        client -> client : Display error
+        client -> client++ : Display error
+        deactivate client
+        deactivate client
     end
 
     |||
