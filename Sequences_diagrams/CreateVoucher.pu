@@ -1,0 +1,28 @@
+@startuml CreateCourse
+actor admin as user
+participant "Front-end" as client
+participant "Back-end" as server 
+database "Database" as db
+
+autonumber 1.1 "<b>0:"
+
+user -> client++ : Click create voucher
+client -> server++ : POST: api/Admin/voucher
+server -> db++ : Save the voucher
+db --> server : Save result
+deactivate db
+ 
+alt Success
+    server --> client : Create voucher success message
+    client -> client++ : Display message
+    deactivate client
+    |||
+else Fail
+    server --> client : Error result message
+    deactivate server
+    client -> client++ : Display error
+    deactivate client
+    deactivate client
+    |||
+end
+@enduml
