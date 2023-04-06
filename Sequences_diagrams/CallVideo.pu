@@ -1,0 +1,24 @@
+@startuml CallVideo
+actor Caller as caller
+actor Receiver as receiver
+participant "Front-end" as client
+participant "Back-end" as server
+participant "Videocall SDK" as sdk
+
+autonumber 1.1 "<b>0:"
+
+caller -> client++ : Call the receiver
+client -> server++ : Pass senderId, chat message and receiverId
+server -> server : create token
+server -> sdk++ : Pass token
+deactivate server
+sdk --> client : Token is valid 
+client --> receiver : Incomming call modal
+receiver -> client : Accept call
+client -> sdk : Receiver accept call message 
+sdk -> sdk : Confirm valid reciver\nbase on token
+sdk --> client : video call room url
+deactivate sdk
+client --> receiver : video call room
+client --> caller : video call room
+@enduml
