@@ -1,0 +1,27 @@
+@startuml Payment
+actor "Client" as client
+participant "VNPay Service" as vnpay
+participant "Front-end" as fe
+participant "Back-end" as be
+database "Database" as db
+autonumber 1.1 "<b>0:"
+client -> fe++: click payment button
+fe -> be++: GET /api/Client/coaching-request/requestId/payment-url
+be -> db++: find coaching request
+db --> be: find result
+deactivate
+
+alt request exists
+    be --> fe: payment url
+    fe -> vnpay++: redirect base on payment url
+    vnpay -> vnpay: display payment methods
+    client -> vnpay: choose payment method and pay money
+    vnpay -> be: send payment result
+    deactivate
+    be -> be: display payment result
+else request does not exist
+    be --> fe: not found
+    deactivate
+    fe -> fe: display not found message
+end
+@enduml
