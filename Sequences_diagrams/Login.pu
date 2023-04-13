@@ -1,13 +1,22 @@
 @startuml Login
-
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 14
+skinparam sequenceGroupHeaderFontSize 15
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Guest as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
 user -> client++ : Click login button
+client -> client++: Show login modal
+user -> client: Enter information
+deactivate
 client -> server++ : POST: api/User/login
 server -> db++ : Get user by username
 db --> server : Retrived user
@@ -16,12 +25,12 @@ server -> server++: Verify user
 deactivate server
 
 alt Valid user
-    server -> client : Tokens
+    server --> client : Tokens
     |||
 else Unvalid user
-    server --> client : Unvalid user notification
+    server --> client: Unvalid user notification
     deactivate
-    client -> client++ : Display error message
+    client -> client++: Display error message
     deactivate
     deactivate  
     |||

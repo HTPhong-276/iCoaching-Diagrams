@@ -1,0 +1,26 @@
+@startuml ViewContracts
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Coach/Client" as user
+participant "Front-end" as client
+participant "Back-end" as server 
+database "Database" as db
+
+user -> client++ : Click contract tab
+client -> server++ : GET: api/Coach/contracts (for coach)\nGET: api/Client/contracts (for client)
+server -> db++ : Get list of contracts
+db --> server : Contracts
+deactivate
+server --> client : List of contracts
+deactivate
+client -> client++ : Display contracts
+deactivate
+deactivate
+@enduml

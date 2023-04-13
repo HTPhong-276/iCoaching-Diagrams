@@ -1,11 +1,18 @@
 @startuml Chat
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Sender as sender
 actor Receiver as receiver
 participant "Front-end" as client
 participant "Back-end" as server
 database "Database" as db
-
-autonumber 1.1 "<b>0:"
 
 sender -> client++ : Choose the receiver
 sender -> client : Send chat message
@@ -15,6 +22,7 @@ server -> db : Get chat message from sender to receiver
 db --> server : Retrive chat message from sender to receiver
 deactivate db
 server --> client : Chat message from sender to receiver
-client --> receiver : See chat from sender
-
+deactivate server
+client --> receiver : View chat from sender
+deactivate client
 @enduml

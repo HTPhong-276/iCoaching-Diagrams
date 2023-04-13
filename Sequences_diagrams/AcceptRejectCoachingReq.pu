@@ -1,11 +1,17 @@
 @startuml AcceptRejectCoachingRequest
-actor Client as user
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Coach as coach
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
-
-autonumber 1.1 "<b>0:"
 
 coach -> client++ : Click Accecpt / Reject request button
 
@@ -15,40 +21,29 @@ db --> server : Retrived data
 deactivate db
 
 alt No data
-    server --> client : Request not found notification
-    client -> client++ : Display error message
+    server --> client : Request not found
+    client -> client++ : Display not found message
     deactivate client
     |||
 else Has data
-    alt Coach accepts
-        server -> server++ : Create a contract\n(See Create contract diagram)
-        deactivate 
-        server -> db++ : Delete current coaching request 
+    alt Accept
+        server -> db++ : Create contract
         deactivate db
-        server --> client : Coach accepts request message
-        client -> client++ : Client confirm accept request
+        server --> client : Contract created message
+        client -> client++ : Display message
         deactivate
-        deactivate client
         |||
-    else Coach Rejects
+    else Reject
         server -> db++ : Update request status to \n"Reject" with the reason
-        deactivate server
-        deactivate db
+        deactivate
+        server --> client: Update message
+        deactivate
+        client -> client++: Display message
+        deactivate
+        deactivate
         |||
     end
     |||
 end 
 
-autonumber inc A
-user -> client++ : Confirm accept/reject coaching contract
-client -> server++ : PUT: client confirm contract api
-alt accept
-    server -> db++ : Update contract status to "Active"
-else reject
-    server -> db : Update contract status to "Cancel"
-end
-db --> server : Update contract result
-server --> client : result message
-client -> client++ : display message
-deactivate  
 @enduml

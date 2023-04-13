@@ -1,25 +1,32 @@
 @startuml Profile
-
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 14
+skinparam sequenceGroupHeaderFontSize 15
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor "Authenticated\nUser" as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
 
 user -> client++ : Click profile tab 
-client -> server++ : Get: api/User/profile
-server -> db++ : Retrive logged user infomation
-db --> server : Retrived Data
+client -> server++ : GET: api/User/profile
+server -> db++ : Get user's infomation
+db --> server : User's information
 deactivate
 
 alt Has data
-    server --> client : Retrived the user information
-    client -> client++ : Display data
+    server --> client : User's information
+    client -> client++ : Display profile
     deactivate
 
 else No data
-    server --> client : User not found message
+    server --> client : Not found
     deactivate
     client -> client++ : Display error message
     deactivate

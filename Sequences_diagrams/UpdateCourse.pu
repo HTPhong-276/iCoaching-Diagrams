@@ -1,23 +1,29 @@
 @startuml UpdateCourse
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Coach as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
-user -> client++ : Click update course
-client -> server++ : PUT: api/training-course/{courseId}
+user -> client++ :Enter information and click update course
+client -> server++ : PUT: api/Coach/training-course/{courseId}
 server -> db++ : Update course infomation
-db --> server : Update data result
 deactivate
 
 alt Success
-    server --> client : Update success message
+    server --> client : Update message
     client -> client++ : Display message
     deactivate
 else Fail
-    server --> client : Error result message
+    server --> client : Error message
     deactivate
     client -> client++ : Display error
     deactivate

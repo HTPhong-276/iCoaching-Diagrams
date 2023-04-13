@@ -1,43 +1,45 @@
 @startuml Register
+' skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Guest as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
 user -> client++ : Click register button
-client -> server++ : POST: api/User/register
+client -> client++: Show register modal
+user -> client: Enter information
+deactivate
+client -> server++ : POST api/User/register
 server -> db++ : Check existence username, email and phone
-db --> server : Retrived result
+db --> server : Result
 deactivate
 
-alt Existence
-    server --> client : Infomation existed notification
+alt Existed
+    server --> client : Existed errors
     client -> client++ : Display error message 
     deactivate 
     |||
-else Non-existence
-    server -> db++ : Save registered user
-    db --> server : Save data result
+else Not existed
+    server -> db++ : Save new user
     deactivate
-    alt Success
-        server --> client : Register success message
-        client -> client++ : Display message
-        deactivate
-        server --> user : Send email-confirm email
-        user -> server : Confirm email
-        server -> db++ : Update email verify status
-        deactivate
-        |||
-    else Fail
-        server --> client : Error result message
-        deactivate
-        client -> client++ : Display error
-        deactivate
-        deactivate
-        |||
-    end
-    |||
+    server --> client : Registered message
+    client -> client++ : Display message
+    deactivate
+    server --> user : Send\nconfirmation email
+    user -> server : Click verification url
+    server -> server++: Verify user
+    server -> db++ : Update user verification
+    deactivate
+    deactivate
+    deactivate
+    deactivate
 end 
 @enduml

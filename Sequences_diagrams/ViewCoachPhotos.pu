@@ -1,29 +1,34 @@
 @startuml ViewCoachPhoto
-
-actor Guest as user
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Guest/Client" as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
 
-user -> client++ : "View coach photos" request 
-client -> server++ : Get: api/coach/{coachId}/photos
+user -> client++ : Click "Photo" tab on coach profile 
+client -> server++ : GET: api/Coach/{coachId}/photos
 server -> db++ : Retrive Coach by coachId
 db --> server : Retrived Data
 deactivate
 
 alt Has data
-    server -> server++ : Apply pagination
-    deactivate
-    server --> client : Retrived Coach photos
+    server --> client : Coach photos
     client -> client++ : Display data
     deactivate
 
 else No data
-    server --> client : Coach not found message
+    server --> client : Coach not found
     deactivate
-    client -> client++ : Display error message
+    client -> client++ : Display not found message
     deactivate 
     deactivate
     |||

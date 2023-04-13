@@ -1,14 +1,20 @@
 @startuml ViewContractDetail
-
-actor "Coach/User" as user
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Coach/Client" as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
 user -> client++ : View report detail
-client -> server++ : Get: ---Get client contract detail--- 
+client -> server++ : GET: api/Contract/{contractId}/detail 
 server -> db++ : Retrive the contract by contract id
 db --> server : Retrived Data
 deactivate
@@ -19,9 +25,9 @@ alt Has data
     deactivate
 
 else No data
-    server --> client : Data not found message
+    server --> client : Mot found message
     deactivate
-    client -> client++ : Display error message 
+    client -> client++ : Display not found message 
     deactivate
     deactivate
     |||

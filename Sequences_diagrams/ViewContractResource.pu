@@ -1,0 +1,25 @@
+@startuml ViewContractResource
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Coach/Client" as user
+participant "Front-end" as fe
+participant "Back-end" as be
+database Database as db
+
+user -> fe++: Click "resource" tab on contract detail
+fe -> be++: GET: /api/Contract/{contractId}/files
+be -> db++: Get files by contract id
+db --> be: Data
+deactivate db
+be --> fe: List of files
+deactivate be
+fe -> fe++: Display list files
+|||
+@enduml

@@ -1,49 +1,44 @@
 @startuml RequestCoaching
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Client as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
 user -> client++ : Click request training course
 client -> server++ : POST: api/Client/coaching-request
-server -> db++ : Get requested coach and course 
-db --> server : Retrived result
+server -> db++ : Check if client requested any course or not 
+db --> server : Result
 deactivate
 
-alt No data
-    server --> client : Certification submited before notification
-    client -> client ++: Display notification
+alt Requested
+    server --> client : A request of client is pending
+    client -> client ++: Display message
     deactivate 
     |||
-else Has data
-    server -> db++ : Check coach and course already\nrequested by user
-    db --> server : Result
+else No request
+    
+    server -> db++ : Create new coaching request
     deactivate
-
-    alt Not yet
-        server -> db++ : Create and save new coaching request
-        db --> server : Save data result
-        deactivate
-        alt Success
-            server --> client : Request coaching success message
-            client -> client++ : Display message
-            deactivate
-        else Fail
-            server --> client : Error result message
-            client -> client++ : Display error
-            deactivate
-        end
-        |||
-    else Already requested
-        server --> client : Already requested course message
-        deactivate
+    alt Success
+        server --> client : Create message
         client -> client++ : Display message
+        deactivate
+    else Fail
+        server --> client : Error message
+        deactivate
+        client -> client++ : Display error
         deactivate
         deactivate
     end
-
     |||
 end 
 @enduml

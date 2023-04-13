@@ -1,35 +1,36 @@
 @startuml AcceptRejectCoachVerifyRequest
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Admin as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
-user -> client++ : Click Accecpt / Reject account button
+user -> client++ : Click Accecpt/Reject button on verification request
 client -> server++ : PUT: api/Admin/coach-account-status/{userId}
-server -> db++ : Get certification verification \nrequest by userId
+server -> db++ : Get certificate submission\nby id
 db --> server : Retrived data
 deactivate db
 
 alt No data
-    server --> client : Request not found notification
+    server --> client : Request not found
     client -> client++ : Display error message
     deactivate client
     |||
 else Has data
-    alt Accept
-        server -> db++ : Update request status to "Accept"
-        |||
-    else Reject
-        server -> db : Update request status to \n"Reject" with the reason
-        deactivate server
-        |||
-    end
-    db --> server : Update result
+    server -> db++: Update certificate submission\nUpdate coach verification status
     deactivate db
-    server --> client : Result message
+    server --> client : Update message
+    deactivate
     client -> client++ : Display message
+    deactivate
     deactivate
     |||
 end 

@@ -1,0 +1,27 @@
+@startuml UploadFile
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Coach" as user
+participant "Front-end" as fe
+participant "Back-end" as be
+participant "Storage service" as service
+database Database as db
+
+user -> fe++: Choose file and click upload button
+fe -> be++: POST: /api/Contract/{contractId}/file
+be -> service: Upload file
+service --> be: File's download url
+be -> db++: Save new file asset
+deactivate db
+be --> fe: Upload message
+deactivate be
+fe -> fe++: Display message
+|||
+@enduml

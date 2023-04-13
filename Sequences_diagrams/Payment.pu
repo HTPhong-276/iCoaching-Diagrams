@@ -1,27 +1,46 @@
 @startuml Payment
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor "Client" as client
 participant "VNPay Service" as vnpay
 participant "Front-end" as fe
 participant "Back-end" as be
 database "Database" as db
-autonumber 1.1 "<b>0:"
-client -> fe++: click payment button
+client -> fe++: Click payment button
 fe -> be++: GET /api/Client/coaching-request/requestId/payment-url
-be -> db++: find coaching request
-db --> be: find result
+be -> db++: Find coaching request
+db --> be: Find result
 deactivate
 
 alt request exists
-    be --> fe: payment url
-    fe -> vnpay++: redirect base on payment url
-    vnpay -> vnpay: display payment methods
-    client -> vnpay: choose payment method and pay money
-    vnpay -> be: send payment result
+    be --> fe: Payment url
+    fe --> vnpay++: Redirect
+    vnpay -> vnpay++: Display payment methods
+    client -> vnpay: Choose payment method and pay money
+    vnpay -> be: Send payment result
     deactivate
-    be -> be: display payment result
+    deactivate
+    be -> be++: Display payment result
+    opt Pay successfully
+        be -> db++: Update coaching request
+        deactivate
+        deactivate
+        |||
+    end
+    |||
 else request does not exist
-    be --> fe: not found
+    be --> fe: Not found
     deactivate
-    fe -> fe: display not found message
+    fe -> fe++: Display not found message
+    deactivate
+    deactivate
+    |||
 end
 @enduml

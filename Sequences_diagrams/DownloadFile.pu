@@ -1,0 +1,26 @@
+@startuml DownloadFile
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Coach/Client" as user
+participant "Front-end" as fe
+participant "Back-end" as be
+database Database as db
+
+user -> fe++: Click download file
+fe -> be++: GET: {contractId:int}/file/downloading/{fileId:int}
+be -> db++: Get file asset
+db --> be: Data
+deactivate db
+be -> be++: Create download stream
+be --> fe: Download stream
+deactivate be
+fe -> fe++: Download to user's device
+|||
+@enduml

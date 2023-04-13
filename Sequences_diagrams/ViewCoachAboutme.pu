@@ -1,20 +1,27 @@
 @startuml ViewCoachAboutme
-
-actor Guest as user
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Guest/Client" as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
 
-user -> client++ : "View coach about-me" request 
-client -> server++ : Get: api/coach/{coachId}/about-me
-server -> db++ : Retrive Coach by coachId
+user -> client++ : Click "About me" tab on coach profile 
+client -> server++ : GET: api/Coach/{coachId}/about-me
+server -> db++ : Get by coachId
 db --> server : Retrived Data
 deactivate
 
 alt Has data
-    server --> client : Coach about-me information 
+    server --> client : Coach's about-me 
     client -> client++ : Display data
     deactivate
 

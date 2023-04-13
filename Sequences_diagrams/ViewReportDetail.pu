@@ -1,11 +1,17 @@
 @startuml ViewReportDetail
-
-actor Guest as user
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor Admin as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
-
-autonumber 1.1 "<b>0:"
 
 user -> client++ : View report detail
 client -> server++ : Get: api/Admin/reports/{requestId}
@@ -19,7 +25,7 @@ alt Has data
     deactivate
 
 else No data
-    server --> client : Data not found message
+    server --> client : Not found
     deactivate
     client -> client++ : Display error message 
     deactivate

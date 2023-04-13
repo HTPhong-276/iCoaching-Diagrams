@@ -1,36 +1,27 @@
 @startuml ViewCoachingRequests
-
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Coach as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
 user -> client++ : Click coaching requests tab
-client -> server++ : Get: api/Coach/coaching-requests
-server -> db++ : Get coaching request to logged coach by status
-db --> server : Retrived Data
+client -> server++ : GET: api/Coach/coaching-requests
+server -> db++ : Get coaching requests
+db --> server : Coaching requests
 deactivate
-
-alt Has data
-    server -> server++ : Apply pagination
-    deactivate
-    server --> client : List of request
-    client -> client++ : Display each request client information
-    deactivate
-    |||
-
-else No data
-    server --> client : No data found message
-    client -> client++ : Display message
-    deactivate 
-    |||
-
-else Error
-    server --> client : Error message
-    deactivate
-    |||
-end 
+server --> client : List of requests
+deactivate
+client -> client++ : Display requests
+deactivate
+deactivate
 
 @enduml

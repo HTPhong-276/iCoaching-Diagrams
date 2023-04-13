@@ -1,40 +1,48 @@
 @startuml UpdateProfile
+' skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor "Authenticated\nUser" as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
 user -> client++ : Click update profile
+client -> client++: Show form input
+user -> client: Enter information
+deactivate
 client -> server++ : PUT: api/User/profile
 server -> db++ : Check existence of new email and phone
 db --> server : Retrived result
 deactivate
 
-alt Existence
-    server --> client : Infomation existed notification
+alt Existed
+    server --> client : Existed error
     client -> client++ : Display error message
     deactivate 
     |||
-else Non-existence
-    server -> db++ : Update new profile information
-    db --> server : Update data result
+else Not existed
+    server -> db++ : Update new profile
     deactivate
 
     alt Success
-        server --> client : Update success message
+        server --> client : Updated message
         client -> client++ : Display message
         deactivate
 
-        alt Email changed
-            server --> user : Send email-confirm email
+        opt Email change
+            server --> user : Send confirm email
             user -> server : Confirm email
-            server -> db++ : Update email verify status
+            server -> db++ : Update email verification status
             deactivate
-            |||
         end
-
+        |||
     else Fail
         server --> client : Error result message
         deactivate

@@ -1,14 +1,21 @@
 @startuml ViewTraniningCourseDetail
-
-actor Guest as user
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Guest/Client" as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
 
 user -> client++ : Click on the course 
-client -> server++ : Get: api/coach/{coachId}/training-course-detail/{courseId}
+client -> server++ : GET: api/Coach/{coachId}/training-course-detail/{courseId}
 server -> db++ : Retrive training course by coachId and courseId
 db --> server : Retrived Data
 deactivate
@@ -16,26 +23,13 @@ deactivate
 alt Has data
     server --> client : Retrived the course detail
 
-    alt Client role
-        server -> server++ : Check the course is requested\nby logged Client or not
-        deactivate
-
-        alt Requested
-            server -> client : Unable to request course
-            |||
-        else Not yet
-            server -> client : Able to request course
-            |||
-        end
-    end
-
     client -> client++ : Display data
     deactivate
 
 else No data
-    server --> client : Course not found message
+    server --> client : Course not found
     deactivate
-    client -> client++ : Display error message 
+    client -> client++ : Display not found message 
     deactivate
     deactivate
     |||

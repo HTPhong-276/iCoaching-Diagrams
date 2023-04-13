@@ -1,29 +1,34 @@
 @startuml ViewTrainingCourseOfCoach
-
-actor Guest as user
+skinparam dpi 125
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 30
+skinparam sequenceGroupHeaderFontSize 20
+skinparam DatabaseFontSize 40
+skinparam sequence {
+    ParticipantFontSize 40
+    ActorFontSize 40
+    ArrowFontSize 30
+} 
+actor "Guest/Client" as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
-user -> client++ : "View coach training course" request 
-client -> server++ : Get: api/coach/{coachId}/training-courses
-server -> db++ : Retrive courses by coachId
+user -> client++ : Click "Training course" tab on coach profile 
+client -> server++ : GET: api/Coach/{coachId}/training-courses
+server -> db++ : Get courses by coachId
 db --> server : Retrived Data
 deactivate
 
 alt Has data
-    server -> server++ : Apply pagination
-    deactivate
-    server --> client : Retrived courses
-    client -> client++ : Display data
+    server --> client : Courses
+    client -> client++ : Display courses
     deactivate
 
 else No data
-    server --> client : Coach not found message
+    server --> client : Coach not found
     deactivate
-    client -> client++ : Display error message 
+    client -> client++ : Display not found message 
     deactivate
     deactivate
     |||

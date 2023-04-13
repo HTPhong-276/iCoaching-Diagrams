@@ -1,11 +1,18 @@
 @startuml UpdateAvatar
+skinparam sequenceGroupFontSize 14
+skinparam sequenceGroupHeaderFontSize 15
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor "Authenticated\nUser" as user
 participant "Front-end" as client
 participant "Back-end" as server 
 participant "Storage service" as imgCloud
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
 
 user -> client++ : Click update Avatar
 client -> server++ : PUT: api/User/avatar
@@ -13,12 +20,11 @@ server -> imgCloud++ : Save avatar
 imgCloud --> server : Url and publicId
 deactivate
 server -> db++ : Update avatar url and publicId
-db --> server : Update data result
 deactivate
 
 alt Success
     
-    server --> client : Update success message
+    server --> client : Update message
     client -> client++ : Display message
     deactivate
 else Fail

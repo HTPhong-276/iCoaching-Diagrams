@@ -1,39 +1,37 @@
 @startuml CreateAdmin
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 14
+skinparam sequenceGroupHeaderFontSize 15
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor SuperAdmin as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
 
 user -> client++ : Click create admin
+client -> client++: Show form input
+user -> client: Enter admin information
+deactivate
 client -> server++ : POST: api/SuperAdmin/admin
 server -> db++ : Check existence username
 db --> server : Retrived result
 deactivate db
 
-alt Existence
-    server --> client : Username existed notification
+alt Existed
+    server --> client : Existed message
     client -> client++ : Display error message 
     deactivate client
     |||
-else Non-existence
+else Not existed
     server -> db++ : Save new admin
-    db --> server : Save data result
-    deactivate db
-    alt Success
-        server --> client : Register success message
-        client -> client++ : Display message
-        deactivate client
-        |||
-    else Fail
-        server --> client : Error result message
-        deactivate server
-        client -> client++ : Display error
-        deactivate client
-        deactivate client
-        |||
-    end
-    |||
+    deactivate
+    deactivate
+    deactivate
 end 
 @enduml

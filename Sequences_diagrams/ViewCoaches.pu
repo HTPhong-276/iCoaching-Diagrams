@@ -1,36 +1,25 @@
 @startuml ViewAllCoaches
-
-actor Admin as user
+skinparam sequenceMessageAlign center
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor User as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
 
 user -> client++ : "View all coaches" request
-client -> server++ : Get: api/admin/coaches (for admins) \nGet: api/coaches (for other roles)
-server -> db++ : Get list of coaches
-db --> server : Retrived Data
+client -> server++ : GET: api/Admin/coaches (for admins)\nGET: api/Guest/coaches (client, guest)
+server -> db++ : Get coaches
+db --> server : coaches
 deactivate
 
-alt Has data
-    server -> server++ : Apply pagination
-    deactivate
-    server --> client : List of coaches
-    client -> client++ : Display data
-    deactivate
-    |||
-
-else No data
-    server --> client : No coach found message
-    client -> client++ : Display message
-    deactivate 
-    |||
-
-else Error
-    server --> client : Error message
-    deactivate
-    |||
-end 
+server --> client : List of coaches
+client -> client++ : Display list
+deactivate
 
 @enduml

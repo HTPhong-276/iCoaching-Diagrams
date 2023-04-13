@@ -1,24 +1,35 @@
 @startuml CallVideo
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Caller as caller
 actor Receiver as receiver
 participant "Front-end" as client
-participant "Back-end" as server
 participant "Videocall SDK" as sdk
+participant "Back-end" as server
 
-autonumber 1.1 "<b>0:"
 
 caller -> client++ : Call the receiver
 client -> server++ : Pass senderId, chat message and receiverId
-server -> server : create token
+server -> server++ : create token
 server -> sdk++ : Pass token
 deactivate server
+deactivate
 sdk --> client : Token is valid 
 client --> receiver : Incomming call modal
 receiver -> client : Accept call
 client -> sdk : Receiver accept call message 
-sdk -> sdk : Confirm valid reciver\nbase on token
+sdk -> sdk++ : Confirm valid reciver\nbase on token
+deactivate
 sdk --> client : video call room url
 deactivate sdk
 client --> receiver : video call room
 client --> caller : video call room
+deactivate client
 @enduml

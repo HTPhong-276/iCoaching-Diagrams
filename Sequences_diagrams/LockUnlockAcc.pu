@@ -1,10 +1,18 @@
-@startuml Register
+@startuml Lock/Unlock
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 20
+} 
 actor Admin as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
 
 user -> client++ : Click Lock/Unlock account button
 client -> server++ : PUT: api/Admin/account-status/{userId}
@@ -13,17 +21,17 @@ db --> server : Retrived data
 deactivate db
 
 alt No data
-    server --> client : User not found notification
-    client -> client++ : Display error message 
+    server --> client : Not found
+    client -> client++ : Display not found message 
     deactivate client
     deactivate client
     |||
 else Has data
-    alt User locked
+    alt locked
         server -> db++ : Update status to "unlocked"
         deactivate db
         |||
-    else User unlocked
+    else unlocked
         server -> db++ : Update status to "locked"
         deactivate db
         deactivate server

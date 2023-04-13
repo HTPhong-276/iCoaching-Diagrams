@@ -1,39 +1,45 @@
-@startuml CertificationSubmit
+@startuml CertificateSubmission
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Coach as user
 participant "Front-end" as client
 participant "Back-end" as server 
 participant "Storage service" as imgCloud
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
-user -> client++ : Click submit certificate
+user -> client++ :Enter information and click submit certificate
 client -> server++ : POST: api/Coach/certification-request
-server -> db++ : Check existence of logged coach's submission
-db --> server : Retrived result
+server -> db++ : Check existence submission
+db --> server : Result
 deactivate db
 
-alt Existence
-    server --> client : Certification submited before notification
+alt Exist
+    server --> client : Certificate submitted
     client -> client++ : Display notification
     deactivate client 
     |||
-else Non-existence
+else Not exist
 
-    server -> imgCloud++ : Save certification images
+    server -> imgCloud++ : Upload images
     imgCloud --> server : Url and publicId
     deactivate imgCloud
 
-    server -> db++ : Update new profile information
-    db --> server : Update data result
+    server -> db++ : Save submission
     deactivate db
 
     alt Success
-        server --> client : Certificate submit message
+        server --> client : Submit message
         client -> client++ : Display message
         deactivate client
     else Fail
-        server --> client : Error result message
+        server --> client : Error message
         deactivate server
         client -> client++ : Display error
         deactivate client

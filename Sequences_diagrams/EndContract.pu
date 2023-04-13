@@ -1,0 +1,26 @@
+@startuml EndContract
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Coach" as user
+
+participant "Front-end" as fe
+participant "Back-end" as be
+database Database as db
+
+user -> fe++: Click end contract on contract detail
+fe -> be++: PUT: /api/Coach/contract/{contractId:int}/completion
+be -> db++: Update contract status
+deactivate db
+be --> fe: Update message
+deactivate be
+fe -> fe++: Display message
+|||
+|||
+@enduml

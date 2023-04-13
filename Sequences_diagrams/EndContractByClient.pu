@@ -1,0 +1,48 @@
+@startuml EndContractByClient
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Client" as user
+
+participant "Front-end" as fe
+participant "Back-end" as be
+database Database as db
+
+user -> fe++: Click pending tab on contract page
+fe -> be++: GET: /api/Client/contracts
+be -> db++: Get contracts with status: pending
+db --> be: Contracts
+deactivate db
+be --> fe: List of contracts
+deactivate be
+fe -> fe++: Display contracts
+deactivate
+user -> fe: Choose contract to view detail and click accept/reject button
+fe -> be++: PUT: /api/Client/contract/{contractId}/completion
+be -> db++: Update contract
+
+alt accept
+    be --> fe: Contract complete message
+    fe -> fe++: Display message
+    deactivate
+else reject
+    fe -> fe++: Show modal to enter report information
+    user -> fe: Enter report information and click send
+    deactivate
+    fe -> be: POST: /api/Contract/{contractId}/report
+    be -> db: Save report
+    deactivate db
+    be --> fe: Report saved
+    deactivate be
+    fe -> fe++: Display message
+    deactivate
+    deactivate
+    |||
+end
+@enduml

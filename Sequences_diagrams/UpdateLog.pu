@@ -1,0 +1,30 @@
+@startuml UpdateLog
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor "Coach" as user
+participant "Front-end" as fe
+participant "Back-end" as be
+participant "Storage service" as service
+database Database as db
+
+user -> fe++: Enter information and click upload button
+fe -> be++: PUT: /api/Contract/{contractId}/log/{logId}
+opt resourceUpload
+    be -> service: Upload file
+    service --> be: File's download url (for files)\nUrl & public id (for images)
+    |||
+end
+be -> db++: Update training log
+deactivate db
+be --> fe: Update message
+deactivate be
+fe -> fe++: Display message
+|||
+@enduml

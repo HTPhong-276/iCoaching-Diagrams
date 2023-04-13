@@ -1,28 +1,34 @@
 @startuml ReportCoach
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
 actor Client as user
 participant "Front-end" as client
 participant "Back-end" as server
 participant "Storage service" as imgCloud 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
-user -> client++ : Click report coach
-client -> server++ : POST: client report api
-server -> imgCloud++ : Save envidence images
+user -> client++ :Enter information and click report button on contract detail
+client -> server++ : POST: /api/Contract/{contractId}/report
+server -> imgCloud++ : Save images
 imgCloud --> server : Url and publicId
 deactivate
 server -> db++ : Save report
-db --> server : Save result
 deactivate db
  
 alt Success
-    server --> client : Report success message
+    server --> client : Report successfully message
     client -> client++ : Display message
     deactivate client
     |||
 else Fail
-    server --> client : Error result message
+    server --> client : Error message
     deactivate server
     client -> client++ : Display error
     deactivate client

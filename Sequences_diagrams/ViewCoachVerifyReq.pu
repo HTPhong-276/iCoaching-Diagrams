@@ -1,30 +1,23 @@
 @startuml ViewCoachVerifyRequest
-
-actor Coach as user
+skinparam sequenceMessageAlign center
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor Admin as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
 
-autonumber 1.1 "<b>0:"
-
-user -> client++ : View certification verify requests 
+user -> client++ : Click "verification requests" tab 
 client -> server++ : Get: api/Admin/cert-requests
-server -> db++ : Retrive all certification request by status
-db --> server : Retrived Data
+server -> db++ : Retrive all certifcate submission by status
+db --> server : Retrived data
+deactivate
+server --> client : List of request
+client -> client++ : Display list
 deactivate
 
-alt Has data
-    server -> server++ : Apply pagination
-    deactivate
-    server --> client : Retrived data
-    client -> client++ : Display data
-    deactivate
-
-else No data
-    server --> client : Data not found message
-    deactivate
-    client -> client++ : Display error message 
-    deactivate
-    |||
-end 
 @enduml

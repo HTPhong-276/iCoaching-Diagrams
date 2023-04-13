@@ -1,31 +1,27 @@
 @startuml ViewAllReports
-
-actor Guest as user
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupFontSize 20
+skinparam sequenceGroupHeaderFontSize 20
+skinparam sequence {
+    ParticipantFontSize 20
+    ActorFontSize 20
+    DatabaseFontSize 20
+    ArrowFontSize 18
+} 
+actor Admin as user
 participant "Front-end" as client
 participant "Back-end" as server 
 database "Database" as db
-
-autonumber 1.1 "<b>0:"
 
 user -> client++ : View all reports 
 client -> server++ : Get: api/Admin/reports
 server -> db++ : Retrive all report by status
 db --> server : Retrived Data
 deactivate
+server --> client : Retrived data
+deactivate
+client -> client++ : Display data
+deactivate
+deactivate
 
-alt Has data
-    server -> server++ : Apply pagination
-    deactivate
-    server --> client : Retrived data
-    client -> client++ : Display data
-    deactivate
-
-else No data
-    server --> client : Data not found message
-    deactivate
-    client -> client++ : Display error message
-    deactivate
-    deactivate 
-    |||
-end 
 @enduml
