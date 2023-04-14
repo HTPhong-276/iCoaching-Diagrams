@@ -1,0 +1,35 @@
+@startuml ViewAllCoaches
+
+actor "Super\nAdmin" as user
+participant "Front-end" as client
+participant "Back-end" as server 
+database "Database" as db
+
+autonumber 1.1 "<b>0:"
+
+user -> client++ : "View all admins" request
+client -> server++ : Get: api/superadmin/admins
+db --> server : Retrived Data
+deactivate
+
+alt Has data
+    server -> server++ : Apply pagination
+    deactivate
+    server --> client : List of admins
+    client -> client++ : Display data
+    deactivate
+    |||
+
+else No data
+    server --> client : No admin found message
+    client -> client++ : Display message
+    deactivate 
+    |||
+
+else Error
+    server --> client : Error message
+    deactivate
+    |||
+end 
+
+@enduml

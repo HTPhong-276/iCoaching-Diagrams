@@ -7,7 +7,7 @@ database "Database" as db
 autonumber 1.1 "<b>0:"
 
 user -> client++ : Create contract action
-client -> server++ : POST: create contract api
+client -> server++ : POST: api/Contract
 server -> db++ : Retrive related coach and client
 db --> server : Retrive result
 deactivate db
